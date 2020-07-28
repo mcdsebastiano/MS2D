@@ -1,23 +1,50 @@
 class Piece {
-  constructor(x, y, size) {
+  constructor(x, y, size, color) {
     this.x = Math.floor((x * (size * 2)) + size / 2);
     this.y = Math.floor((y * (size * 2)) + size / 2);
     this.size = size;
+    this.val = ' ';
+    this.color = color;
+    this.moving = false;
   }
 
-  move(file, rank) {
+  isInHand() {
+    return this.moving === true;
+  }
 
-    let x = file.charCodeAt(0) - 97;
-    let y = rank - 1;
+  inHand(value) {
+    this.moving = value;
+    return this;
+  }
 
+  setPos(pos) {
+    this.pos = pos;
+  }
+
+  getCol() {
+    return this.pos.file.charCodeAt(0) - 97;
+  }
+
+  getRow() {
+    return this.pos.rank - 1;
+  }
+
+  setX(x) {
     this.x = Math.floor((x * (this.size * 2)) + this.size / 2);
+  }
+
+  setY(y) {
     this.y = Math.floor((y * (this.size * 2)) + this.size / 2);
+  }
+
+  value() {
+    return this.val;
   }
 
   paint() {
     let p = fillRect(this.x, this.y, this.size, this.size);
-    p.rotateZ(180);
-    p.rotate(180, 0, 1, 0);
+    // if (this.moving !== true)
+    // p.rotateZ(180);
     return p;
   }
 }

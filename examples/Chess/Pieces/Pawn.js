@@ -1,9 +1,10 @@
 class Pawn extends Piece {
-  constructor(file, rank, size) {
-    super(file.charCodeAt(0) - 97, rank - 1, size);
+  constructor(file, rank, size, color) {
+    super(file.charCodeAt(0) - 97, 7 - (rank - 1), size, color);
     this.pos = {
       file,
       rank
     }
+    this.val = 'p'
   }
 }
