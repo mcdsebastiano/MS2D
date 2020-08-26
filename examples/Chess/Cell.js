@@ -16,9 +16,6 @@ class Cell {
     } else {
       setColor(BLACK);
     }
-
-    let cell = fillRect(this.x, this.y, this.size, this.size);
-    // cell.rotate(180, 0, 1, 0);
-    return cell;
+    return fillRect(this.x, this.y, this.size, this.size);
   }
 }

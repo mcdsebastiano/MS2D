@@ -72,13 +72,10 @@ class Tetromino {
 
   // this should be investigated i.e do i update the rotated pieces X/Y
   // (top left)
-  rotate(dir) {
-    if (this.locked)
-      return;
-    this.rotation = this.getNextPosition();
-    // these checks needs to be applied to ANY object not just canvas.
-    // i.e obj.x + obj.width() or something and maybe done as a check to be
-    // returned from the function ?
+  rotate(board, dir) {
+
+    this.rotation = this.getNextPosition(dir);
+    
     if (this.x < 0) {
       this.translate(-this.x, 0);
     } else if (this.x + this.getWidth() > WIDTH) {
@@ -88,7 +85,19 @@ class Tetromino {
       let diff = (this.y + this.getHeight()) - HEIGHT;
       this.translate(0, -diff);
     }
-    this.draw();
+
+    // this.draw();
+  }
+  collides(board, x = 0, y = 0) {
+    for (let i = 0; i < board.cells.length; i++) {
+      if (board.cells.length > 0) {
+        const found = curr.cells.find(cell => cell.x + x == board.cells[i].x && cell.y + y == board.cells[i].y);
+        if (typeof found !== 'undefined') {
+          return true
+        }
+      }
+    }
+    return false
   }
 
   translate(x, y) {
@@ -107,15 +116,24 @@ class Tetromino {
     return true;
   }
 
-  getNextPosition() {
-    let newArray = [];
-    for (let i = 0; i < this.rotation.length; i++) {
-      newArray[i] = [];
-      for (let j = 0; j < this.rotation.length; j++) {
-        newArray[i][j] = this.rotation[this.rotation.length - j - 1][i];
+  getNextPosition(dir) {
+    let newPosition = [];
+    if (dir > 0) {
+      for (let i = 0; i < this.rotation.length; i++) {
+        newPosition[i] = [];
+        for (let j = 0; j < this.rotation.length; j++) {
+          newPosition[i][j] = this.rotation[this.rotation.length - j - 1][i];
+        }
+      }
+    } else {
+      for (let i = 0; i < this.rotation.length; i++) {
+        newPosition[i] = [];
+        for (let j = 0; j < this.rotation.length; j++) {
+          newPosition[i][j] = this.rotation[j][this.rotation.length - i - 1];
+        }
       }
     }
-    return newArray;
+    return newPosition;
   }
 
   draw() {

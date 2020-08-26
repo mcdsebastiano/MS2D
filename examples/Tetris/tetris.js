@@ -76,26 +76,12 @@ function checkY() {
   return curr.getBottomBounds() === HEIGHT;
 }
 
-// this is fairly one-dimensional!!
-function collides(x = 0, y = 0) {
-  let collided;
-  for (let i = 0; i < board.cells.length; i++) {
-    if (board.cells.length > 0) {
-      curr.cells.forEach(cell => {
-        if (cell.x + x == board.cells[i].x && cell.y + y == board.cells[i].y)
-          collided = true;
-      })
-    }
-  }
-  return collided;
-}
-
 function shift(dir) {
-  if (!collides(w * dir, 0))
+  if (!curr.collides(board, w * dir, 0))
     curr.translate(w * dir, 0);
 }
 function goodMove() {
-  return !collides(0, w) && !checkY();
+  return !curr.collides(board, 0, w) && !checkY();
 }
 
 function shiftDown() {
@@ -106,7 +92,7 @@ function shiftDown() {
 }
 
 function rotate(dir) {
-  curr.rotate(dir);
+  curr.rotate(board, dir);
 }
 
 function drop() {

@@ -1,3 +1,4 @@
+include('Piece.js');
 include('Board.js');
 
 let board;
@@ -5,14 +6,18 @@ let pieceInHand, originalPiece;
 let blackPieces, whitePieces;
 
 function setup() {
-  board = new Board(50, 50, 400);
+  board = new Board(550);
   blackPieces = board.blackPieces;
   whitePieces = board.whitePieces;
+
+  const undoButton = document.createElement('button');
+  undoButton.textContent = "UNDO";
+  undoButton.onclick = () => board.undoMove();
+  document.body.appendChild(undoButton);
 }
 
 function draw() {
   clear();
-  drawBorder();
   board.paint();
 }
 
@@ -26,11 +31,8 @@ function findPiece() {
 }
 
 function mousePressed() {
-  // if we click on a piece
   if (pieceInHand = findPiece()) {
-    //that piece is in our hand
     pieceInHand.inHand(true)
-    // save the piece for later.
     originalPiece = cloneClass(pieceInHand);
     draw();
   }
@@ -38,25 +40,32 @@ function mousePressed() {
 
 function mouseMove() {
   let drag;
-  // if we are actually moving,
   if (drag = dragMove(dragX(), dragY())) {
-    // and we have a piece in our hand,
     if (typeof pieceInHand !== 'undefined') {
-      // adjust the piece's location on the board.
+
       pieceInHand.x = drag.x - board.x;
       pieceInHand.y = drag.y - board.y;
+
       draw();
+
+      // highlight cell
+      setColor(YELLOW);
+      let idx = board.cellIndex(pieceInHand);
+      Rect(board.cells[idx].x, board.cells[idx].y, board.cellSize, board.cellSize);
     }
   }
 }
 
 function mouseReleased() {
   dragEnd();
-  // when we stop moving, if we have a piece in our hand,
   if (typeof pieceInHand !== 'undefined') {
-    // move the piece to the new board position,
-    board.setPiecePos(originalPiece, pieceInHand);
-    // and release the piece from our hand
+    board.movePiece(originalPiece, pieceInHand);
+    if (board.isMoveOK(originalPiece, pieceInHand) === true) {
+      draw();
+      board.assignCellValue(pieceInHand, pieceInHand.color);
+    } else {
+      board.undoMove();
+    }
     pieceInHand.inHand(false);
     originalPiece = undefined;
     pieceInHand = undefined;

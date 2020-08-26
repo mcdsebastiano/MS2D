@@ -1,27 +1,23 @@
-class King extends Piece {
+class Bishop extends Piece {
   constructor(file, rank, size, color) {
     super(file.charCodeAt(0) - 97, 7 - (rank - 1), size, color);
     this.pos = {
       file,
       rank
     }
-    this.val = 'k';
+    this.val = 'b';
   }
 
   legalMoves(board) {
-
     let moves = [];
     let idx = board.cellIndex(this);
 
-    if (idx % 8 === 0) {
-      moves.push( - 8, -7, 1, 8, 9);
-    } else if (idx % 8 === 7) {
-      moves.push(-9, -8, -1, 7, 8);
-    } else {
-      moves.push(-9, -8, -7,  - 1, 1, 7, 8, 9);
+    for (let i = 0; i < 8 - this.rank - 1; i++) {
+      moves.push((this.rank - 1) * 8 + board.ctoi(this.file) + i * 8 + i);
     }
+    
+    return moves;
 
-    return moves.filter(index => index >= 0 && index < 64);
   }
 
   // paint() {

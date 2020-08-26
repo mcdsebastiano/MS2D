@@ -103,7 +103,6 @@ function keyPressed() {
 }
 
 function keyReleased() {
-
   switch (keyCode()) {
   case UP_ARROW:
     ship.thrusting(false);
