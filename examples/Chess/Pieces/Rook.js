@@ -9,66 +9,29 @@ class Rook extends Piece {
   }
 
   legalMoves(board) {
-    let moves = [];
-    let idx = board.cellIndex(this);
-  
-    let first = board.cells.slice(0, idx);
-    let last = board.cells.slice(idx);
-
-    first.push(last.shift());
-
-    //FILE
-    for (let i = first.length - 1; i >= 0; i--) {
-      if (board.cells[i].pos.file == this.pos.file && i != idx) {
-        if (board.cells[i].value != ' ') {
-          if (this.color != board.cells[i].color) {
-            moves.push(i);
-          }
-          break;
-        }
-        moves.push(i);
-      }
-    }
-    for (let i = 0; i < last.length + 1; i++) {
-      if (board.cells[idx + i].pos.file == this.pos.file) {
-        if (board.cells[idx + i].value != ' ') {
-          if (this.color != board.cells[idx + i].color) {
-            moves.push(idx + i);
-          }
-          break;
-        }
-        moves.push(idx + i);
-      }
-    }
-
-    // RANK
-    for (let i = first.length - 1; i >= 0; i--) {
-      if (board.cells[i].pos.rank == this.pos.rank) {
-        if (board.cells[i].value != ' ') {
-          if (this.color != board.cells[i].color) {
-            moves.push(i);
-          }
-          break;
-        }
-        moves.push(i);
-      }
-    }
-    for (let i = 0; i < last.length + 1; i++) {
-      if (board.cells[idx + i].pos.rank == this.pos.rank) {
-        if (board.cells[idx + i].value != ' ') {
-          if (this.color != board.cells[idx + i].color) {
-            moves.push(idx + i);
-          }
-          break;
-        }
-        moves.push(idx + i);
-      }
-    }
-
-    return moves;
+    return this.slideHorizontally(board.cellIndex(this)).concat(this.slideVertically(board.cellIndex(this)));
   }
-  // paint() {
-    // let p = fillRect(this.x, this.y, this.size, this.size);
-    // return p;
-  // }
+
+  paint() {
+
+    let rect1 = fillRect(Math.floor(this.size / 2) - Math.floor(this.size / 3) + 3, 6, Math.ceil(this.size / 1.5) - 6, this.size - 17);
+    rect1.translate(this.x, this.y);
+
+    let rect2 = fillRect(4, 0, Math.floor(this.size / 6), this.size / 3);
+    rect2.translate(this.x, this.y);
+
+    let rect3 = fillRect(Math.floor(this.size / 2) - Math.floor(this.size / 12), 0, Math.floor(this.size / 6), this.size / 3);
+    rect3.translate(this.x, this.y);
+
+    let rect4 = fillRect(Math.floor(this.size / 1.33), 0, Math.floor(this.size / 6), this.size / 3);
+    rect4.translate(this.x, this.y);
+
+    fillTriangle(this.size / 2, 25, this.size - 4, 15, 4, 15).translate(this.x, this.y);
+    fillTriangle(this.size / 2, 20, this.size - 4, this.size - 10, 4, this.size - 10).translate(this.x, this.y);
+    fillRect(2, this.size - 6.5, this.size - 4.5, 6).translate(this.x, this.y);
+
+    return rect1;
+
+  }
+
 }

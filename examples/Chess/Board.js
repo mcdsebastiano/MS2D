@@ -1,28 +1,4 @@
-/* your board is laid out like this:
- *
- *      | a | b | c | d | e | f | g | h |
- *     -|---|---|---|---|---|---|---|---|-
- *     8|   |   |   |   |   |   |   |   |8
- *     -|---|---|---|---|---|---|---|---|-
- *     7|   |   |   |   |   |   |   |   |7
- *     -|---|---|---|---|---|---|---|---|-
- *     6|   |   |   |   |   |   |   |   |6
- *     -|---|---|---|---|---|---|---|---|-
- *     5|   |   |   |   |   |   |   |   |5
- *     -|---|---|---|---|---|---|---|---|-
- *     4|   |   |   |   |   |   |   |   |4
- *     -|---|---|---|---|---|---|---|---|-
- *     3|   |   |   |   |   |   |   |   |3
- *     -|---|---|---|---|---|---|---|---|-
- *     2|   |   |   |   |   |   |   |   |2
- *     -|---|---|---|---|---|---|---|---|-
- *     1|   |   |   |   |   |   |   |   |1
- *     -|---|---|---|---|---|---|---|---|-
- *      | a | b | c | d | e | f | g | h |
- */
-
 include('Cell.js');
-include('Piece.js');
 include('Pieces/Rook.js');
 include('Pieces/Knight.js');
 include('Pieces/Bishop.js');
@@ -30,17 +6,16 @@ include('Pieces/Queen.js');
 include('Pieces/King.js');
 include('Pieces/Pawn.js');
 
-const numCells = 8;
+const numCells = 8; // per row & col
 
 class Board {
-  constructor(x, y, w) {
-    // metadata
+  constructor(w, x = 0, y = 0) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = w;
     this.cellSize = Math.floor(this.w / numCells);
-    this.pieceSize = this.cellSize / 2;
+    this.pieceSize = this.cellSize / 1.5;
     this.moveList = [];
     // generate cells
     this.cells = [];
@@ -49,16 +24,16 @@ class Board {
         this.cells.push(new Cell(i, j, this.cellSize));
       }
     }
-    // starting positions
+    // spawn pieces
     this.blackPieces = {
-      L_Rook: new Rook('a', 8, this.pieceSize, 'b'),
-      L_Knight: new Knight('b', 8, this.pieceSize, 'b'),
-      L_Bishop: new Bishop('c', 8, this.pieceSize, 'b'),
+      RookA: new Rook('a', 8, this.pieceSize, 'b'),
+      KnightB: new Knight('b', 8, this.pieceSize, 'b'),
+      BishopC: new Bishop('c', 8, this.pieceSize, 'b'),
       Queen: new Queen('d', 8, this.pieceSize, 'b'),
       King: new King('e', 8, this.pieceSize, 'b'),
-      R_Bishop: new Bishop('f', 8, this.pieceSize, 'b'),
-      R_Knight: new Knight('g', 8, this.pieceSize, 'b'),
-      R_Rook: new Rook('h', 8, this.pieceSize, 'b'),
+      BishopF: new Bishop('f', 8, this.pieceSize, 'b'),
+      KnightG: new Knight('g', 8, this.pieceSize, 'b'),
+      RookH: new Rook('h', 8, this.pieceSize, 'b'),
       PawnA: new Pawn('a', 7, this.pieceSize, 'b'),
       PawnB: new Pawn('b', 7, this.pieceSize, 'b'),
       PawnC: new Pawn('c', 7, this.pieceSize, 'b'),
@@ -69,14 +44,14 @@ class Board {
       PawnH: new Pawn('h', 7, this.pieceSize, 'b')
     };
     this.whitePieces = {
-      L_Rook: new Rook('a', 1, this.pieceSize, 'w'),
-      L_Knight: new Knight('b', 1, this.pieceSize, 'w'),
-      L_Bishop: new Bishop('c', 1, this.pieceSize, 'w'),
+      RookA: new Rook('a', 1, this.pieceSize, 'w'),
+      KnightB: new Knight('b', 1, this.pieceSize, 'w'),
+      BishopC: new Bishop('c', 1, this.pieceSize, 'w'),
       Queen: new Queen('d', 1, this.pieceSize, 'w'),
       King: new King('e', 1, this.pieceSize, 'w'),
-      R_Bishop: new Bishop('f', 1, this.pieceSize, 'w'),
-      R_Knight: new Knight('g', 1, this.pieceSize, 'w'),
-      R_Rook: new Rook('h', 1, this.pieceSize, 'w'),
+      BishopF: new Bishop('f', 1, this.pieceSize, 'w'),
+      KnightG: new Knight('g', 1, this.pieceSize, 'w'),
+      RookH: new Rook('h', 1, this.pieceSize, 'w'),
       PawnA: new Pawn('a', 2, this.pieceSize, 'w'),
       PawnB: new Pawn('b', 2, this.pieceSize, 'w'),
       PawnC: new Pawn('c', 2, this.pieceSize, 'w'),
@@ -109,83 +84,187 @@ class Board {
     return 8 - (Math.ceil(pieceY / board.cellSize) - 1);
   }
 
-  saveMove(orinalPiece, finalPiece, capturedIndex = -1) {
-    this.moveList.push({
-      originalPiece,
-      capturedIndex,
-      finalPiece
-    });
+  blackPieceAt(idx) {
+    return this.cells[idx].hasBlackPiece();
   }
 
-  undo() {
-    const undoMove = this.moveList.pop();
-    if (typeof undoMove === 'undefined') {
+  whitePieceAt(idx) {
+    return !this.blackPieceAt(idx);
+  }
+
+  isPawnPromotionState(originalPiece, finalPiece) {
+    return false;
+  }
+
+  isEpState(originalPiece, finalPiece) {
+    return false;
+  }
+
+  isCaptureState(originalPiece, finalPiece) {
+    const landedPiece = this.activePieces.find(p => p !== finalPiece && finalPiece.x == p.x && finalPiece.y == p.y);
+
+    if (typeof landedPiece === 'undefined')
+      return undefined;
+
+    return landedPiece;
+  }
+
+  isCastleState(originalPiece, finalPiece) {
+    if (finalPiece.val !== 'k') {
+      return
+    }
+    let castledRook = undefined;
+    let pendingCell = this.cellIndex(finalPiece);
+    let adjacentCellRight = this.cellIndex(originalPiece) + 2;
+    let adjacentCellLeft = this.cellIndex(originalPiece) - 2;
+    if (pendingCell == adjacentCellRight) {
+      if (finalPiece.pos.rank === 8) {
+        castledRook = this.blackPieces['RookH'];
+        if (this.performCastle(castledRook, 'f', 8) === false) {
+          this.undoMove();
+          return;
+        }
+      } else if (finalPiece.pos.rank === 1) {
+        castledRook = this.whitePieces['RookH'];
+        if (this.performCastle(castledRook, 'f', 1) === false) {
+          this.undoMove();
+          return;
+        }
+      }
+    } else if (pendingCell == adjacentCellLeft) {
+      if (finalPiece.pos.rank === 8) {
+        castledRook = this.blackPieces['RookA'];
+        if (this.performCastle(castledRook, 'd', 8) === false) {
+          this.undoMove();
+          return;
+        }
+      } else if (finalPiece.pos.rank === 1) {
+        castledRook = this.whitePieces['RookA'];
+        if (this.performCastle(castledRook, 'd', 1) === false) {
+          this.undoMove();
+          return;
+        }
+      }
+    }
+    return castledRook;
+  }
+
+  performCastle(rook, file, rank) {
+    if (rook.timesMoved !== 0) {
+      return false;
+    }
+    this.setPiecePos(rook, file, rank);
+    return true;
+  }
+
+  isMoveOK(originalPiece, finalPiece) {
+    // inital save, assume move is OK
+    this.saveMove(originalPiece, finalPiece, -1);
+
+    // if we don't return an index the move is not OK.
+    const legalCells = originalPiece.legalMoves(this).find(index => index == this.cellIndex(finalPiece));
+    if (typeof legalCells === 'undefined') {
+      return false;
+    }
+
+    // check for capture
+    let landedPiece = this.isCaptureState(originalPiece, finalPiece);
+    if (typeof landedPiece !== 'undefined') {
+      if (landedPiece.color == finalPiece.color) {
+        return false;
+      }
+      const capturedIndex = this.activePieces.indexOf(landedPiece);
+      this.activePieces.splice(capturedIndex, 1);
+      this.capturedPieces.push(landedPiece);
+      this.moveList.pop();
+      this.saveMove(originalPiece, finalPiece, capturedIndex);
+      return true;
+    }
+    // check for castling
+    let castledRook = this.isCastleState(originalPiece, finalPiece);
+    if (typeof castledRook !== 'undefined') {
+      this.moveList.pop();
+      this.saveMove(originalPiece, finalPiece, -1, castledRook);
+      return true;
+    }
+
+    // TODO: check for en passant
+    // TODO: check for pawn promotion
+
+    return true
+  }
+
+  undoMove() {
+    if (this.moveList.length === 0) {
       return;
     }
-    let {
+
+    const lastMove = this.moveList.pop();
+    if (typeof lastMove === 'undefined') {
+      return;
+    }
+
+    const {
       finalPiece,
       originalPiece,
       prevBoardState,
-      capturedIndex
-    } = undoMove;
-    // if there is a captured piece then return it to the board
+      capturedIndex,
+      castledPiece
+    } = lastMove;
+
+    switch (castledPiece) {
+    case this.blackPieces['RookA']:
+      this.setPiecePos(castledPiece, 'a', 8);
+      break;
+    case this.blackPieces['RookH']:
+      this.setPiecePos(castledPiece, 'h', 8);
+      break;
+    case this.whitePieces['RookA']:
+      this.setPiecePos(castledPiece, 'a', 1);
+      break;
+    case this.whitePieces['RookH']:
+      this.setPiecePos(castledPiece, 'h', 1);
+      break;
+    default:
+      break;
+    }
+
     if (capturedIndex > -1) {
       this.activePieces.splice(capturedIndex, 0, this.capturedPieces.pop());
     }
-    // and return the last piece to it's original position
-    this.assignCellValue(finalPiece);
-    finalPiece.x = originalPiece.x;
-    finalPiece.y = originalPiece.y;
-    finalPiece.pos = originalPiece.pos;
-    finalPiece.cellIndex = this.cellIndex(finalPiece);
+
+    this.setPiecePos(finalPiece, originalPiece.pos.file, originalPiece.pos.rank)
+    finalPiece.timesMoved--;
     this.paint();
   }
 
-  setPiecePos(originalPiece, finalPiece) {
-    // assign an empty value to the current cell.
-    this.assignCellValue(originalPiece);
+  saveMove(orinalPiece, finalPiece, capturedIndex = -1, castledPiece) {
+    this.moveList.push({
+      originalPiece,
+      capturedIndex,
+      finalPiece,
+      castledPiece
+    });
+  }
 
-    //find the file and rank of the piece in hand
-    let file = this.findFile(finalPiece.x);
-    let rank = this.findRank(finalPiece.y);
+  movePiece(originalPiece, finalPiece) {
+    this.setPiecePos(finalPiece, this.findFile(finalPiece.x), this.findRank(finalPiece.y), originalPiece);
+    finalPiece.timesMoved++;
+    this.paint();
+  }
 
-    // assign the position to the piece in hand (finalPiece)
-    finalPiece.setPos({
+  setPiecePos(piece, file, rank, clearedCell) {
+    clearedCell = clearedCell || piece;
+
+    this.assignCellValue(clearedCell);
+
+    piece.setPos({
       file,
       rank
     });
-    finalPiece.cellIndex = this.cellIndex(finalPiece);
-    // and move the piece to the correct cell in the board.
-    finalPiece.setX(this.ctoi(file))
-    finalPiece.setY(numCells - rank);
-    // save move
-    this.saveMove(originalPiece, finalPiece, -1);
 
-    // and check if the move is OK
-    const legalCells = originalPiece.legalMoves(this).find(index => index == this.cellIndex(finalPiece));
-    if (typeof legalCells !== 'undefined') {
-      // find out if we are landed on a cell with another piece
-      const landedPiece = this.activePieces.find(p => p !== finalPiece && finalPiece.x == p.x && finalPiece.y == p.y);
-      if (typeof landedPiece !== 'undefined') {
-        // if the piece is the same color, undo the move
-        if (landedPiece.color == finalPiece.color) {
-          this.undo();
-          return; // avoids unneccessary repainting
-        } else {
-          // otherwise move the piece from the active array to the captured array
-          const capturedIndex = this.activePieces.indexOf(landedPiece);
-          this.activePieces.splice(capturedIndex, 1);
-          this.capturedPieces.push(landedPiece);
-          // and resave with the added capture
-          this.moveList.pop();
-          this.saveMove(originalPiece, finalPiece, capturedIndex);
-        }
-      }
-    } else {
-      this.undo();
-      return; // avoids unneccessary repainting
-    }
-    this.paint();
+    piece.setX(this.ctoi(file))
+    piece.setY(numCells - rank);
   }
 
   assignCellValue(piece, color) {
@@ -199,13 +278,20 @@ class Board {
     }
   }
 
-  paintPieces() {
+  paint() {
+    clear();
+    // cells
+    for (let i = 0; i < this.cells.length; i++) {
+      const cell = this.cells[i].paint();
+      cell.translate(this.x, this.y);
+    }
+    // pieces
     for (let i = 0; i < this.activePieces.length; i++) {
       let piece = this.activePieces[i];
       if (piece.color === 'w') {
-        setColor(LIGHT_GRAY);
+        setColor(OFF_WHITE);
       } else {
-        setColor(DIM_GRAY);
+        setColor(CHARCOAL);
       }
       let p = piece.paint();
       p.translate(this.x, this.y);
@@ -214,16 +300,4 @@ class Board {
       }
     }
   }
-
-  paint() {
-    setColor(BLACK)
-    Rect(this.x, this.y, this.cellSize * numCells, this.cellSize * numCells)
-
-    for (let i = 0; i < this.cells.length; i++) {
-      const cell = this.cells[i].paint();
-      cell.translate(this.x, this.y);
-    }
-    this.paintPieces();
-  }
-  
 }

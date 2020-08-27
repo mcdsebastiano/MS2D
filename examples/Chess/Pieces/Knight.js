@@ -7,51 +7,77 @@ class Knight extends Piece {
     }
     this.val = 'n';
     this.canJump = true;
-    this.offsetCoords = [6, 10, 15, 17 - 6, -10, -15, -17];
   }
 
   legalMoves(board) {
-
-    let moves = [];
     let idx = board.cellIndex(this);
+    let offsetCoords = [];
 
-    return moves;
+    let col = board.ctoi(this.pos.file);
 
+    if (col >= 2) {
+      offsetCoords.push(6, -10);
+    }
+    if (col <= 5) {
+      offsetCoords.push(-6, 10)
+    }
+
+    if (this.pos.file !== 'h') {
+      offsetCoords.push(-15, 17);
+    }
+    if (this.pos.file !== 'a') {
+      offsetCoords.push(-17, 15)
+    }
+
+    return this.calculateMoves(idx, offsetCoords, true);
   }
 
-  // paint() {
-    // let offscreenCanvas = document.createElement('canvas');
-    // const ctx = offscreenCanvas.getContext('2d');
+  paint() {
 
-    // let img = new Image();
-    // img.src = './pieces/knight.png';
+    fillCircle(0, this.size * 0.5, this.size / 8)
+    .translate(this.x, this.y);
 
-    // let wratio = 1;
+    fillCircle(9, 12, this.size / 5)
+    .translate(this.x, this.y);
 
-    // img.width = Math.floor(img.width * wratio);
-    // img.height = Math.floor(img.height * wratio);
+    fillCircle(6, 8, this.size / 6)
+    .translate(this.x, this.y);
 
-    // offscreenCanvas.width = ctx.width = img.width;
-    // offscreenCanvas.height = ctx.height = img.height;
-    // ctx.drawImage(img, 0, 0, Math.floor(ctx.width / 4), Math.floor(ctx.height));
-    // let imgData = ctx.getImageData(0, 0, Math.floor(img.width / 4), Math.floor(img.height * 4)).data;
-    // let p = newShape();
-    // for (let i = 0; i < imgData.length / 4; i++) {
-    // if (i % 4 == 0) {
-    // setColor(rgba(imgData[i], imgData[i + 1], imgData[i + 2]));
-    // }
+    fillCircle(this.size / 3 + 5, 6, this.size / 5)
+    .translate(this.x, this.y);
 
-    // let type = img.src.substring(img.src.lastIndexOf('.') + 1);
-    // let value;
-    // if (type === 'jpg') {
-    // value = img.width
-    // } else if (type === 'png') {
-    // value = img.height
-    // }
-    // vertexAt(-(WIDTH - this.x + this.size)+ (i % value), Math.floor(-(HEIGHT / 2) + this.y + this.size + (i / value)));
-    // }
-    // endShape();
-    // p.scale(0.1, 0.1);
-    // return p;
-  // }
+    let neck = newShape();
+    neck.fill();
+    vertexAt(18, this.size - 10);
+    vertexAt(this.size, this.size - 10);
+    vertexAt(this.size - 7, 12);
+    vertexAt(35, 12);
+
+    endShape();
+
+    neck.translate(this.x, this.y);
+    
+    fillTriangle(this.size / 2 - 5, 0, this.size / 2 + 7, 10, this.size / 2 - 10, 15)
+    .translate(this.x, this.y);
+
+    fillTriangle(this.size / 2 - 15, 0, this.size / 2, 12, this.size / 2 - 14, 12)
+    .translate(this.x, this.y);
+
+    fillTriangle(0, this.size * 0.6, this.size / 2, 25, 10, 11)
+    .translate(this.x, this.y);
+
+    let mouth = newShape();
+    mouth.fill();
+    vertexAt(10, this.size * 0.8)
+    vertexAt(this.size / 2, 24)
+    vertexAt(this.size / 2 - 10, 22);
+    vertexAt(8, this.size * 0.75);
+    endShape()
+
+    mouth.translate(this.x, this.y);
+
+    let rect1 = fillRect(this.size / 3, this.size - 6.5, this.size / 1.5, 6);
+    rect1.translate(this.x, this.y);
+    return rect1;
+  }
 }
