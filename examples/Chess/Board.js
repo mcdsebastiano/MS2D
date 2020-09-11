@@ -101,12 +101,7 @@ class Board {
   }
 
   isCaptureState(originalPiece, finalPiece) {
-    const landedPiece = this.activePieces.find(p => p !== finalPiece && finalPiece.x == p.x && finalPiece.y == p.y);
-
-    if (typeof landedPiece === 'undefined')
-      return undefined;
-
-    return landedPiece;
+    return this.activePieces.find(p => p !== finalPiece && finalPiece.x == p.x && finalPiece.y == p.y);
   }
 
   isCastleState(originalPiece, finalPiece) {
@@ -150,10 +145,13 @@ class Board {
   }
 
   performCastle(rook, file, rank) {
-    if (rook.timesMoved !== 0) {
+    if (rook.timesMoved > 0) {
       return false;
     }
-    this.setPiecePos(rook, file, rank);
+    this.setPiecePos(rook, {
+      file,
+      rank
+    }, 1);
     return true;
   }
 
@@ -214,16 +212,28 @@ class Board {
 
     switch (castledPiece) {
     case this.blackPieces['RookA']:
-      this.setPiecePos(castledPiece, 'a', 8);
+      this.setPiecePos(castledPiece, {
+        file: 'a',
+        rank: 8
+      }, 1);
       break;
     case this.blackPieces['RookH']:
-      this.setPiecePos(castledPiece, 'h', 8);
+      this.setPiecePos(castledPiece, {
+        file: 'h',
+        rank: 8
+      }, 1);
       break;
     case this.whitePieces['RookA']:
-      this.setPiecePos(castledPiece, 'a', 1);
+      this.setPiecePos(castledPiece, {
+        file: 'a',
+        rank: 1
+      }, 1);
       break;
     case this.whitePieces['RookH']:
-      this.setPiecePos(castledPiece, 'h', 1);
+      this.setPiecePos(castledPiece, {
+        file: 'h',
+        rank: 1
+      }, 1);
       break;
     default:
       break;
@@ -233,9 +243,7 @@ class Board {
       this.activePieces.splice(capturedIndex, 0, this.capturedPieces.pop());
     }
 
-    this.setPiecePos(finalPiece, originalPiece.pos.file, originalPiece.pos.rank)
-    finalPiece.timesMoved--;
-    this.paint();
+    this.setPiecePos(finalPiece, originalPiece.pos, -1)
   }
 
   saveMove(orinalPiece, finalPiece, capturedIndex = -1, castledPiece) {
@@ -248,23 +256,23 @@ class Board {
   }
 
   movePiece(originalPiece, finalPiece) {
-    this.setPiecePos(finalPiece, this.findFile(finalPiece.x), this.findRank(finalPiece.y), originalPiece);
-    finalPiece.timesMoved++;
-    this.paint();
+    let pos = {
+      file: this.findFile(finalPiece.x),
+      rank: this.findRank(finalPiece.y)
+    }
+    this.setPiecePos(finalPiece, pos, 1, originalPiece);
   }
 
-  setPiecePos(piece, file, rank, clearedCell) {
+  setPiecePos(piece, newPos, moveCountModifier, clearedCell) {
     clearedCell = clearedCell || piece;
-
     this.assignCellValue(clearedCell);
 
-    piece.setPos({
-      file,
-      rank
-    });
+    piece.setPos(newPos);
+    piece.setX(this.ctoi(newPos.file))
+    piece.setY(numCells - newPos.rank);
+    piece.timesMoved += moveCountModifier
 
-    piece.setX(this.ctoi(file))
-    piece.setY(numCells - rank);
+    this.paint();
   }
 
   assignCellValue(piece, color) {

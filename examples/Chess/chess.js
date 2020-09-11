@@ -46,8 +46,10 @@ function mouseMove() {
       pieceInHand.y = drag.y - board.y;
 
       draw();
-
-      // highlight cell
+      
+      /* highlight cell
+       * small bug when a piece is in file A or H it can highlight the next
+       * indexed cell on the opposite side */
       setColor(YELLOW);
       let idx = board.cellIndex(pieceInHand);
       Rect(board.cells[idx].x, board.cells[idx].y, board.cellSize, board.cellSize);
