@@ -69,8 +69,8 @@ class Ship {
   paint() {
     setColor(WHITE);
     let ship = Triangle(-this.r, -this.r + 2, this.r, 0, -this.r, this.r - 2);
-    //FIXME: a Shape() should be able to it's own width and height automatically
-    // this will solve most (or all) centering issues.
+    // FIXME: a Shape() should be able to calculate it's own width and height
+    // automatically.
     ship.h = 16;
     ship.w = 20;
     ship.translate(this.pos.x + ship.w / 2, this.pos.y + ship.h / 2);

@@ -178,7 +178,7 @@ class Board {
       this.saveMove(originalPiece, finalPiece, capturedIndex);
       return true;
     }
-    // check for castling
+    // check for castle
     let castledRook = this.isCastleState(originalPiece, finalPiece);
     if (typeof castledRook !== 'undefined') {
       this.moveList.pop();

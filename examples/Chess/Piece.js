@@ -62,7 +62,7 @@ class Piece {
     let p = fillRect(this.x, this.y, this.size, this.size);
     return p;
   }
-
+	
   /*
    *  BOARD MOVEMENT
    *--------------------
