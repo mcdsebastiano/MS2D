@@ -1,5 +1,5 @@
 ## 
-This library is intended to be strictly an educational tool to be used by myself to learn JS and WebGL.
+This library is strictly intended to be an educational tool for myself to learn JS and WebGL.
 
 All of the more complicated examples are incomplete. Not that the library is incapable of accomplishing the tasks, just that I haven't completed them.
 
