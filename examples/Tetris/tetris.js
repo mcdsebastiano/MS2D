@@ -141,7 +141,8 @@ function shiftPiece(xdir, ydir) {
   }
 
   if (rightMost + x <= WIDTH && leftMost + x >= 0) {
-    curr = piece;
+    curr.x += x;
+    curr.y += y;
     return true;
   }
 
@@ -176,22 +177,11 @@ function rotatePiece(direction) {
   piece.height = calculateHeight(newRotation);
   piece.width = calculateWidth(newRotation);
 
-  for (let i = 0; i < playedPieces.length; i++) {
-    let pp = playedPieces[i];
-    let ppBlocks = getBlocks(pp);
-
-    let ppRightMost = rightMostBlock(ppBlocks);
-    let ppLeftMost = ppRightMost - calculateWidth(pp.rotation);
-    let ppTopMost = topMostBlock(ppBlocks);
-
-    if (checkRotation(piece) === true) {
-      return piece;
-    } else {
-      return curr;
-    }
+  if (checkRotation(piece)) {
+    return piece;
+  } else {
+    return curr;
   }
-
-  return piece;
 }
 
 function checkRotation(piece) {
