@@ -1,6 +1,6 @@
 let J = {
   color: BLUE,
-  r0: [
+  rotation: [
     [0, 1, 1],
     [0, 1, 0],
     [0, 1, 0]
@@ -8,7 +8,7 @@ let J = {
 };
 let L = {
   color: ORANGE,
-  r0: [
+  rotation: [
     [1, 1, 0],
     [0, 1, 0],
     [0, 1, 0]
@@ -16,7 +16,7 @@ let L = {
 };
 let S = {
   color: RED,
-  r0: [
+  rotation: [
     [1, 0, 0],
     [1, 1, 0],
     [0, 1, 0],
@@ -24,7 +24,7 @@ let S = {
 };
 let Z = {
   color: GREEN,
-  r0: [
+  rotation: [
     [0, 1, 0],
     [1, 1, 0],
     [1, 0, 0]
@@ -32,14 +32,14 @@ let Z = {
 };
 let O = {
   color: YELLOW,
-  r0: [
+  rotation: [
     [1, 1],
     [1, 1]
   ]
 };
 let I = {
   color: CYAN,
-  r0: [
+  rotation: [
     [0, 1, 0, 0],
     [0, 1, 0, 0],
     [0, 1, 0, 0],
@@ -49,7 +49,7 @@ let I = {
 };
 let T = {
   color: PURPLE,
-  r0: [
+  rotation: [
     [0, 1, 0],
     [1, 1, 1],
     [0, 0, 0]
