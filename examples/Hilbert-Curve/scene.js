@@ -1,4 +1,4 @@
-let order = 8;
+let order = 6;
 let N = Math.floor(Math.pow(2, order));
 let total = N * N;
 let counter = 0;
