@@ -4,20 +4,43 @@ let refreshRate = 60;
 let tile_size = 25;
 let ticker = 0;
 
+let grid_width = 400;
+let grid_height = 500;
+
+let grid_start = tile_size * 2;
+let grid_end = grid_start + grid_width;
+
+let preview_start = grid_end + grid_start * 2;
+let preview_width = 150;
+let preview_height = 100;
+
 let needPiece = false;
 let playedBlocks = [];
 let allPieces = [];
 
 let curr;
+let next = 0;
+let nextPiece;
 
 function setup() {
   allPieces = [J, L, S, Z, T, I, O];
+  nextPiece = allPieces[next];
   curr = newPiece();
 }
+
+
 
 function draw() {
   setColor(BLACK);
   drawPiece(curr);
+  
+  // grid
+  Rect(grid_start, 0, grid_width, grid_height);
+  
+  //next piece
+  Rect(preview_start, grid_start, preview_width, preview_height);
+  
+  drawPiece(nextPiece);
 
   for (let i = 0; i < playedBlocks.length; i++) {
     let block = playedBlocks[i];
@@ -100,15 +123,19 @@ function keyPressed() {
 }
 
 function newPiece() {
-  let piece = allPieces[Math.floor(Math.random() * allPieces.length)];
-  piece.height = calculateHeight(piece.rotation);
-  piece.width = calculateWidth(piece.rotation);
+  let piece = nextPiece;
+  let next = Math.floor(Math.random() * allPieces.length);
+  nextPiece = clone(allPieces[next]);
+  nextPiece.x = preview_start + grid_start;
+  nextPiece.y = grid_start;
+  nextPiece.width = calculateWidth(nextPiece.rotation);
+  nextPiece.height = calculateHeight(nextPiece.rotation);
 
   let ratio = Math.floor((piece.width / tile_size) / 2); // number of blocks
   if (ratio === 0) {
     ratio = 1; // the darn vertical line
   }
-  piece.x = WIDTH / 2 - (ratio * tile_size);
+  piece.x = grid_end / 2 - (ratio * tile_size) + tile_size;
 
   ratio = Math.floor((piece.height / tile_size) / 2);
   piece.y = 50 - (ratio * tile_size);
@@ -138,7 +165,6 @@ function dropPiece() {
 }
 
 function shiftPiece(xdir, ydir) {
-
   if (needPiece === true) {
     return false;
   }
@@ -155,17 +181,14 @@ function shiftPiece(xdir, ydir) {
   piece.y += y;
 
   if (collides(piece)) {
-    // the current collision detection is pretty unforgiving.
-    // a more elegant approach would be to shift the piece instead
-    // of just gtfo of the function
     return false;
   }
 
   let topMost = topMostBlock(getBlocks(piece))
 
-    if (leftMost + x >= 0 && rightMost + x <= WIDTH) {
+    if (leftMost + x >= grid_start && rightMost + x <= grid_end) {
 
-      if (topMost + curr.height > HEIGHT) {
+      if (topMost + curr.height > grid_height) {
         return false;
       }
 
@@ -222,19 +245,19 @@ function checkRotation(piece) {
   let lowerMost = topMost + piece.height;
   let leftMost = rightMost - piece.width;
 
-  if (leftMost < 0) {
-    piece.x += -leftMost;
-  } else if (rightMost > WIDTH) {
-    piece.x -= rightMost - WIDTH;
-  } else if (lowerMost > HEIGHT) {
-    piece.y -= lowerMost - HEIGHT;
+  if (leftMost < grid_start) {
+    piece.x += leftMost;
+  } else if (rightMost > grid_end) {
+    piece.x -= rightMost - grid_end;
+  } else if (lowerMost > grid_height) {
+    piece.y -= lowerMost - grid_height;
   }
 
   if (collides(piece)) {
     if (shiftPiece(tile_size, 0) || shiftPiece(-tile_size, 0)) {
       return true;
     }
-    
+
     return false;
   }
 
@@ -247,7 +270,7 @@ function collides(piece) {
     for (pBlock of playedBlocks) {
       if (pBlock.x == block.x && pBlock.y == block.y) {
         return true;
-      }
+      } 
     }
   }
   return false;
@@ -306,7 +329,7 @@ function rightMostBlock(blocks) {
 }
 
 function topMostBlock(blocks) {
-  let topMost = HEIGHT;
+  let topMost = grid_height;
   for (let i = 0; i < blocks.length; i++) {
     let block = blocks[i];
     if (block.y < topMost) {
