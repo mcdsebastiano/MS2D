@@ -83,16 +83,16 @@ function draw() {
 
 function keyPressed() {
   switch (keyCode()) {
-  case UP_ARROW:
+  case ARROW_UP:
     ship.thrusting(true);
     break;
-  case LEFT_ARROW:
+  case ARROW_LEFT:
     ship.setRotation(4);
     break;
-  case RIGHT_ARROW:
+  case ARROW_RIGHT:
     ship.setRotation(-4);
     break;
-  case DOWN_ARROW:
+  case ARROW_DOWN:
     break;
   case SPACE_BAR:
     ship.fire();
@@ -104,11 +104,11 @@ function keyPressed() {
 
 function keyReleased() {
   switch (keyCode()) {
-  case UP_ARROW:
+  case ARROW_UP:
     ship.thrusting(false);
     break;
-  case LEFT_ARROW:
-  case RIGHT_ARROW:
+  case ARROW_LEFT:
+  case ARROW_RIGHT:
     ship.setRotation(0);
     break;
   }
