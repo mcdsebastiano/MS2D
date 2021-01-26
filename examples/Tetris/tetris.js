@@ -138,6 +138,11 @@ function dropPiece() {
 }
 
 function shiftPiece(xdir, ydir) {
+
+  if (needPiece === true) {
+    return false;
+  }
+
   let x = tile_size * xdir;
   let y = tile_size * ydir;
 
@@ -226,6 +231,10 @@ function checkRotation(piece) {
   }
 
   if (collides(piece)) {
+    if (shiftPiece(tile_size, 0) || shiftPiece(-tile_size, 0)) {
+      return true;
+    }
+    
     return false;
   }
 
