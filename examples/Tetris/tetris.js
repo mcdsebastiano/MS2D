@@ -1,6 +1,3 @@
-// collisions and rotations all completed..
-// all thats left to do is scoring and win conditions
-
 include('inc/Pieces.js');
 
 let refreshRate = 60;
@@ -8,7 +5,7 @@ let tile_size = 25;
 let ticker = 0;
 
 let needPiece = false;
-let playedPieces = [];
+let playedBlocks = [];
 let allPieces = [];
 
 let curr;
@@ -22,23 +19,44 @@ function draw() {
   setColor(BLACK);
   drawPiece(curr);
 
-  for (let i = 0; i < playedPieces.length; i++) {
-    drawPiece(playedPieces[i]);
+  for (let i = 0; i < playedBlocks.length; i++) {
+    let block = playedBlocks[i];
+    setColor(block.color) // unfortunately, this is excessive but necessarily right now
+    fillRect(block.x, block.y, tile_size, tile_size);
+    setColor(BLACK)
+    Rect(block.x, block.y, tile_size, tile_size);
   }
 
   drawBorder();
 }
 
+function pushBlocks(piece) {
+  let blocks = getBlocks(clone(piece));
+  for (let block of blocks) {
+    let x = block.x;
+    let y = block.y;
+    let color = piece.color;
+    playedBlocks.push({
+      color,
+      x,
+      y
+    });
+  }
+}
+
 function update() {
   ticker++;
+
   if (ticker % refreshRate === 0) {
+
     if (needPiece === true) {
       curr = newPiece();
       needPiece = false;
+      clearLines();
 
     } else {
       if (shiftPiece(0, 1) === false) {
-        playedPieces.push(clone(curr));
+        pushBlocks(curr);
         needPiece = true;
       }
     }
@@ -103,9 +121,9 @@ function drawPiece(piece) {
     for (let x = 0; x < piece.rotation.length; x++) {
       if (piece.rotation[y][x] == 1) {
         setColor(piece.color);
-        fillRect(tile_size, tile_size, piece.x + x * tile_size, piece.y + y * tile_size);
+        fillRect(piece.x + x * tile_size, piece.y + y * tile_size, tile_size, tile_size);
         setColor(BLACK);
-        Rect(tile_size, tile_size, piece.x + x * tile_size, piece.y + y * tile_size);
+        Rect(piece.x + x * tile_size, piece.y + y * tile_size, tile_size, tile_size);
       }
     }
   }
@@ -120,11 +138,6 @@ function dropPiece() {
 }
 
 function shiftPiece(xdir, ydir) {
-  let topMost = topMostBlock(getBlocks(curr));
-  if (topMost + curr.height >= HEIGHT) {
-    return false;
-  }
-
   let x = tile_size * xdir;
   let y = tile_size * ydir;
 
@@ -137,16 +150,27 @@ function shiftPiece(xdir, ydir) {
   piece.y += y;
 
   if (collides(piece)) {
+    // the current collision detection is pretty unforgiving.
+    // a more elegant approach would be to shift the piece instead
+    // of just gtfo of the function
     return false;
   }
 
-  if (rightMost + x <= WIDTH && leftMost + x >= 0) {
-    curr.x += x;
-    curr.y += y;
-    return true;
-  }
+  let topMost = topMostBlock(getBlocks(piece))
 
-  return false;
+    if (leftMost + x >= 0 && rightMost + x <= WIDTH) {
+
+      if (topMost + curr.height > HEIGHT) {
+        return false;
+      }
+
+      curr.x += x;
+      curr.y += y;
+
+      return true;
+    }
+
+    return false;
 }
 
 function rotatePiece(direction) {
@@ -209,35 +233,30 @@ function checkRotation(piece) {
 }
 
 function collides(piece) {
-  let blocks = getBlocks(piece)
-    for (let i = 0; i < playedPieces.length; i++) {
-      let pp = playedPieces[i];
-      let ppBlocks = getBlocks(pp);
-      for (block of blocks) {
-        for (ppBlock of ppBlocks) {
-          if (ppBlock.x == block.x && ppBlock.y == block.y) {
-
-            return true;
-          }
-        }
+  let blocks = getBlocks(piece);
+  for (block of blocks) {
+    for (pBlock of playedBlocks) {
+      if (pBlock.x == block.x && pBlock.y == block.y) {
+        return true;
       }
     }
-    return false;
+  }
+  return false;
 }
 
 function getBlocks(piece) {
-  let coords = [];
+  let blocks = [];
   for (let y = 0; y < piece.rotation.length; y++) {
     for (let x = 0; x < piece.rotation.length; x++) {
       if (piece.rotation[y][x] === 1) {
-        coords.push({
+        blocks.push({
           x: piece.x + (x * tile_size),
           y: piece.y + (y * tile_size)
         });
       }
     }
   }
-  return coords;
+  return blocks;
 }
 
 function calculateHeight(rotation) {
@@ -286,4 +305,22 @@ function topMostBlock(blocks) {
     }
   }
   return topMost;
+}
+
+function clearLines() {
+  for (let y = HEIGHT; y >= tile_size; y -= tile_size) {
+    let line = playedBlocks.filter(c => c.y === y - tile_size);
+    console.log(line);
+    if (line.length === 16) {
+      playedBlocks.sort((a, b) => b.y - a.y);
+      let idx = playedBlocks.findIndex(a => a.x === line[0].x && a.y === line[0].y);
+      playedBlocks.splice(idx, 16);
+      playedBlocks.forEach(block => {
+        if (block.y < y) {
+          block.y += tile_size;
+        }
+      });
+      y += tile_size; // reset the line index
+    }
+  }
 }
