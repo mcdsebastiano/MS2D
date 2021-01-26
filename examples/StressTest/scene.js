@@ -14,7 +14,7 @@ function setup() {
 
 function draw() {
   // drawBorder();
-  for (let i = 0; i < 20000; i++) {
+  for (let i = 0; i < 50000; i++) {
     let r = Rect(xcoords[i], ycoords[i], 10, 10);
     // r.translate(WIDTH / 2 - (r.w + convertX(r.x)), HEIGHT / 2 - (r.h + convertY(r.y)));
     // r.rotateZ(angle, true);
