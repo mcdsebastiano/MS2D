@@ -76,6 +76,7 @@ function draw() {
   });
 
   stars.forEach(star => {
+    setColor(WHITE);
     fillRect(star.x, star.y, 1.5, 1.5);
   })
 

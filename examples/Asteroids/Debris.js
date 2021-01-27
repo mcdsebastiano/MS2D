@@ -13,7 +13,8 @@ class Debris {
   }
 
   paint() {
-    setColor(WHITE);
+    setColor(OFFWHITE);
+    setAlpha(0.3);
     newShape();
     for (let i = 0; i < this.particles.length; i++)
       this.particles[i].paint();
