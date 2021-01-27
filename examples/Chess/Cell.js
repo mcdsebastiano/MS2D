@@ -37,9 +37,9 @@ class Cell {
 
   paint() {
     if ((this.pos.file.charCodeAt(0) - 1 + this.pos.rank) % 2 === 0) {
-      setColor(LIGHT_TAN)
+      setColor(LIGHTTAN)
     } else {
-      setColor(LIGHT_BROWN);
+      setColor(LIGHTBROWN);
     }
     return fillRect(this.x, this.y, this.size, this.size);
   }
