@@ -17,7 +17,7 @@ const Direction = {
 let dir;
 
 function setup() {
-  clearColor(DARK_GREEN)
+  clearColor(DARKGREEN)
   snakePos = {
     X: 250,
     Y: 250

@@ -1,16 +1,19 @@
 include('Piece.js');
 include('Board.js');
 
+let mX
+let mY;
+
 let board;
 let pieceInHand, originalPiece;
 let blackPieces, whitePieces;
+
 
 function setup() {
   board = new Board(550);
   blackPieces = board.blackPieces;
   whitePieces = board.whitePieces;
-
-  const undoButton = document.createElement('button');
+  let undoButton = document.createElement('button');
   undoButton.textContent = "UNDO";
   undoButton.onclick = () => board.undoMove();
   document.body.appendChild(undoButton);
@@ -18,6 +21,13 @@ function setup() {
 
 function draw() {
   board.paint();
+  setColor(YELLOW)
+  
+  if(typeof pieceInHand !== 'undefined') {
+    let idx = board.cellIndex(pieceInHand);
+    Rect(board.cells[idx].x, board.cells[idx].y, board.cellSize, board.cellSize);  
+  }
+  
 }
 
 function findPiece() {
@@ -38,6 +48,10 @@ function mousePressed() {
 
 function mouseMove() {
   let drag;
+  
+  mX = mouseX();
+  mY = mouseY();
+  
   if (drag = dragMove(dragX(), dragY())) {
     if (typeof pieceInHand !== 'undefined') {
 

@@ -50,9 +50,9 @@ function draw() {
 }
 
 function update() {
+  draw();
   updateBallPosition();
   detectCollisions();
-  draw();
 }
 
 function keyPressed() {
