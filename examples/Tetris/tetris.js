@@ -28,11 +28,8 @@ function setup() {
   curr = newPiece();
 }
 
-
-
 function draw() {
-  setColor(BLACK);
-  drawPiece(curr);
+  drawBlocks(getBlocks(curr));
   
   // grid
   Rect(grid_start, 0, grid_width, grid_height);
@@ -40,15 +37,12 @@ function draw() {
   //next piece
   Rect(preview_start, grid_start, preview_width, preview_height);
   
-  drawPiece(nextPiece);
+  drawBlocks(playedBlocks)
+  
+  
+  drawBlocks(getBlocks(nextPiece));
 
-  for (let i = 0; i < playedBlocks.length; i++) {
-    let block = playedBlocks[i];
-    setColor(block.color) // unfortunately, this is excessive but necessarily right now
-    fillRect(block.x, block.y, tile_size, tile_size);
-    setColor(BLACK)
-    Rect(block.x, block.y, tile_size, tile_size);
-  }
+  
 
   drawBorder();
 }
@@ -124,12 +118,14 @@ function keyPressed() {
 
 function newPiece() {
   let piece = nextPiece;
+  
   let next = Math.floor(Math.random() * allPieces.length);
+  
   nextPiece = clone(allPieces[next]);
+  nextPiece.height = calculateHeight(nextPiece.rotation);
+  nextPiece.width = calculateWidth(nextPiece.rotation);
   nextPiece.x = preview_start + grid_start;
   nextPiece.y = grid_start;
-  nextPiece.width = calculateWidth(nextPiece.rotation);
-  nextPiece.height = calculateHeight(nextPiece.rotation);
 
   let ratio = Math.floor((piece.width / tile_size) / 2); // number of blocks
   if (ratio === 0) {
@@ -143,17 +139,24 @@ function newPiece() {
   return piece;
 }
 
-function drawPiece(piece) {
-  for (let y = 0; y < piece.rotation.length; y++) {
-    for (let x = 0; x < piece.rotation.length; x++) {
-      if (piece.rotation[y][x] == 1) {
-        setColor(piece.color);
-        fillRect(piece.x + x * tile_size, piece.y + y * tile_size, tile_size, tile_size);
-        setColor(BLACK);
-        Rect(piece.x + x * tile_size, piece.y + y * tile_size, tile_size, tile_size);
-      }
-    }
+function drawBlocks(blocks) {
+  for (let i = 0; i < blocks.length; i++) {
+    let block = blocks[i];
+    setColor(block.color) 
+    fillRect(block.x, block.y, tile_size, tile_size);
+    setColor(BLACK)
+    Rect(block.x, block.y, tile_size, tile_size);
   }
+  // for (let y = 0; y < piece.rotation.length; y++) {
+    // for (let x = 0; x < piece.rotation.length; x++) {
+      // if (piece.rotation[y][x] == 1) {
+        // setColor(piece.color);
+        // fillRect(piece.x + x * tile_size, piece.y + y * tile_size, tile_size, tile_size);
+        // setColor(BLACK);
+        // Rect(piece.x + x * tile_size, piece.y + y * tile_size, tile_size, tile_size);
+      // }
+    // }
+  // }
 }
 
 function dropPiece() {
@@ -282,6 +285,7 @@ function getBlocks(piece) {
     for (let x = 0; x < piece.rotation.length; x++) {
       if (piece.rotation[y][x] === 1) {
         blocks.push({
+          color: piece.color, 
           x: piece.x + (x * tile_size),
           y: piece.y + (y * tile_size)
         });

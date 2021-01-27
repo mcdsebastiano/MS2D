@@ -287,7 +287,7 @@ class Board {
   }
 
   paint() {
-    clear();
+    // clear();
     // cells
     for (let i = 0; i < this.cells.length; i++) {
       const cell = this.cells[i].paint();
