@@ -297,7 +297,7 @@ class Board {
     for (let i = 0; i < this.activePieces.length; i++) {
       let piece = this.activePieces[i];
       if (piece.color === 'w') {
-        setColor(OFF_WHITE);
+        setColor(OFFWHITE);
       } else {
         setColor(CHARCOAL);
       }

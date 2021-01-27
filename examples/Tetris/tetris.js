@@ -43,7 +43,7 @@ function mousePressed() {
     audio.src = 'korobeiniki.mp3';
     audio.loop = true;
     audio.play();
-    
+
   }
 }
 
@@ -51,7 +51,7 @@ function drawBounds() {
   setColor(CHARCOAL)
   fillRect(0, 0, WIDTH, HEIGHT);
   setColor(BLACK);
-  fillRect(grid_start - 1, 0, grid_width + 2, grid_height);
+  fillRect(grid_start - 2, 0, grid_width + 2, grid_height);
   fillRect(preview_start, grid_start, preview_width, preview_height);
   drawBorder();
 }
@@ -63,9 +63,9 @@ function draw() {
 }
 
 function update() {
-  
+
   drawBounds();
-  
+
   switch (game_state) {
 
   case 'menu':
@@ -263,8 +263,6 @@ function drawBlocks(blocks) {
     let block = blocks[i];
     setColor(block.color)
     fillRect(block.x + 1, block.y + 1, tile_size - 2, tile_size - 2);
-    setColor(BLACK)
-    // Rect(block.x+1, block.y+1, tile_size-4, tile_size-2);
   }
 }
 
@@ -307,16 +305,23 @@ function topMostBlock(blocks) {
 function clearLines() {
   for (let y = HEIGHT; y >= tile_size; y -= tile_size) {
     let line = playedBlocks.filter(c => c.y === y - tile_size);
-    console.log(line);
+    
     if (line.length === 16) {
+      
       playedBlocks.sort((a, b) => b.y - a.y);
-      let idx = playedBlocks.findIndex(a => a.x === line[0].x && a.y === line[0].y);
+      
+      let idx = playedBlocks.findIndex(a => {
+        return a.x === line[0].x && a.y === line[0].y
+      });
+      
       playedBlocks.splice(idx, 16);
+
       playedBlocks.forEach(block => {
         if (block.y < y) {
           block.y += tile_size;
         }
       });
+
       y += tile_size; // reset the line index
     }
   }

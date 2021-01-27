@@ -78,10 +78,10 @@ class King extends Piece {
     pillar.translate(this.x, this.y);
 
     if (this.color == 'w') {
-      setColor(DIM_GRAY);
+      setColor(DIMGRAY);
 
     } else {
-      setColor(OFF_WHITE);
+      setColor(OFFWHITE);
     }
     let cross = newShape();
     cross.lines();
