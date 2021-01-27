@@ -18,6 +18,7 @@ let allPieces = [];
 let playedBlocks = [];
 let needPiece = false;
 
+let grid_color;
 let grid_width = 400;
 let grid_height = 700;
 let grid_start = tile_size * 2;
@@ -30,6 +31,7 @@ let preview_start = grid_end + grid_start * 2;
 let start_game = false;
 
 function setup() {
+  grid_color = CHARCOAL;
   allPieces = [J, L, I, T, O, Z, S];
   next = allPieces[0];
   game_state = 'menu';
@@ -48,10 +50,10 @@ function mousePressed() {
 }
 
 function drawBounds() {
-  setColor(CHARCOAL)
+  setColor(grid_color)
   fillRect(0, 0, WIDTH, HEIGHT);
   setColor(BLACK);
-  fillRect(grid_start - 2, 0, grid_width + 2, grid_height);
+  fillRect(grid_start - 1, 0, grid_width + 2, grid_height);
   fillRect(preview_start, grid_start, preview_width, preview_height);
   drawBorder();
 }
@@ -69,7 +71,7 @@ function update() {
   switch (game_state) {
 
   case 'menu':
-
+    grid_color = CHARCOAL;
     setColor(OFFWHITE);
     fillRect(menu_start, 100, menu_width, menu_height);
 
@@ -81,6 +83,7 @@ function update() {
   case 'endlessplay':
 
     if (new_game === true) {
+      grid_color = rgba(130,130,130,1);
       curr = newPiece();
       new_game = false;
     }
