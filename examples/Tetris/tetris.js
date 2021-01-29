@@ -9,8 +9,8 @@ let refreshRate = 45;
 
 let game_state;
 
-let menu_width = 600;
-let menu_height = 500;
+let menu_width = WIDTH - 200;
+let menu_height = HEIGHT - 200;
 let menu_start = 100;
 let menu_end = menu_start + menu_width;
 
@@ -20,13 +20,13 @@ let needPiece = false;
 
 let grid_color;
 let grid_width = 400;
-let grid_height = 700;
+let grid_height = HEIGHT;
 let grid_start = tile_size * 2;
 let grid_end = grid_start + grid_width;
 
 let preview_width = 150;
 let preview_height = 100;
-let preview_start = grid_end + grid_start * 2;
+let preview_start = grid_end + tile_size;
 
 let start_game = false;
 
