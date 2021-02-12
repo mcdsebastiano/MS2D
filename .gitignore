@@ -3,9 +3,10 @@ examples/MS2DContext/
 examples/Tetris/tetris - Copy.js 
 examples/Tetris/inc/Tetromino.js
 examples/Tetris/korobeiniki.mp3
-examples/index.html
 index.html
 examples/index.html 
 dir.html 
 directory.php 
 examples/directory.php 
+examples/MineSweeper
+examples/BilliardsPool
