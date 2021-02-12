@@ -41,10 +41,10 @@ function mousePressed() {
   if (game_state === 'menu' && mouseX() >= menu_start && mouseX() <= menu_end) {
     new_game = true;
     game_state = 'endlessplay';
-    let audio = document.createElement('audio');
-    audio.src = 'korobeiniki.mp3';
-    audio.loop = true;
-    audio.play();
+    // let audio = document.createElement('audio');
+    // audio.src = 'korobeiniki.mp3';
+    // audio.loop = true;
+    // audio.play();
 
   }
 }
@@ -59,9 +59,11 @@ function drawBounds() {
 }
 
 function draw() {
+  const nextBlocks = getBlocks(next);
+  const currBlocks = getBlocks(curr);
   drawBlocks(playedBlocks)
-  drawBlocks(getBlocks(next));
-  drawBlocks(getBlocks(curr));
+  drawBlocks(nextBlocks);
+  drawBlocks(currBlocks);
 }
 
 function update() {
@@ -83,7 +85,7 @@ function update() {
   case 'endlessplay':
 
     if (new_game === true) {
-      grid_color = rgba(130,130,130,1);
+      grid_color = rgba(130, 130, 130, 1);
       curr = newPiece();
       new_game = false;
     }
@@ -95,7 +97,6 @@ function update() {
     }
 
     if (ticker % refreshRate === 0) {
-
       if (needPiece === true) {
         curr = newPiece();
         needPiece = false;
@@ -120,39 +121,39 @@ function keyPressed() {
   let dir = 1;
 
   switch (keyCode()) {
-    //////////////////
+  //////////////////
   case 90: // z
     dir = -1;
   case 88: // x
     curr = rotatePiece(dir);
     break;
-    //////////////////
+  //////////////////
   case ARROW_LEFT:
     dir = -1;
   case ARROW_RIGHT:
     shiftPiece(dir, 0);
     break;
-    //////////////////
+  //////////////////
   case ARROW_DOWN:
     shiftPiece(0, dir);
     break;
-    //////////////////
+  //////////////////
   case SPACE_BAR:
     dropPiece();
     break;
-    //////////////////
+  //////////////////
   default:
     break;
   }
 }
 
 function newPiece() {
-  let piece = next;
-  next = clone(allPieces[Math.floor(Math.random() * allPieces.length)]);
+  let piece   = next;
+  next        = clone(allPieces[Math.floor(Math.random() * allPieces.length)]);
   next.height = calculateHeight(next.rotation);
-  next.width = calculateWidth(next.rotation);
-  next.x = preview_start + grid_start;
-  next.y = grid_start;
+  next.width  = calculateWidth(next.rotation);
+  next.x      = preview_start + grid_start;
+  next.y      = grid_start;
 
   let ratio = Math.floor((piece.width / tile_size) / 2); // number of blocks
   if (ratio === 0) {
@@ -174,13 +175,13 @@ function shiftPiece(xdir, ydir) {
   let x = tile_size * xdir;
   let y = tile_size * ydir;
 
-  let blocks = getBlocks(curr);
+  let blocks    = getBlocks(curr);
   let rightMost = rightMostBlock(blocks);
-  let leftMost = rightMost - curr.width;
+  let leftMost  = rightMost - curr.width;
 
   let piece = clone(curr);
-  piece.x += x;
-  piece.y += y;
+  piece.x  += x;
+  piece.y  += y;
 
   if (collides(piece)) {
     return false;
@@ -225,10 +226,10 @@ function rotatePiece(direction) {
     }
   }
 
-  let piece = clone(curr);
+  let piece      = clone(curr);
   piece.rotation = newRotation;
-  piece.height = calculateHeight(newRotation);
-  piece.width = calculateWidth(newRotation);
+  piece.height   = calculateHeight(newRotation);
+  piece.width    = calculateWidth(newRotation);
 
   if (checkRotation(piece)) {
     return piece;
@@ -308,15 +309,15 @@ function topMostBlock(blocks) {
 function clearLines() {
   for (let y = HEIGHT; y >= tile_size; y -= tile_size) {
     let line = playedBlocks.filter(c => c.y === y - tile_size);
-    
+
     if (line.length === 16) {
-      
+
       playedBlocks.sort((a, b) => b.y - a.y);
-      
+
       let idx = playedBlocks.findIndex(a => {
         return a.x === line[0].x && a.y === line[0].y
       });
-      
+
       playedBlocks.splice(idx, 16);
 
       playedBlocks.forEach(block => {
@@ -334,10 +335,9 @@ function checkRotation(piece) {
   let blocks = getBlocks(piece);
 
   let rightMost = rightMostBlock(blocks);
-  let topMost = topMostBlock(blocks);
-
+  let topMost   = topMostBlock(blocks);
   let lowerMost = topMost + piece.height;
-  let leftMost = rightMost - piece.width;
+  let leftMost  = rightMost - piece.width;
 
   if (leftMost < grid_start) {
     piece.x += leftMost;
@@ -385,6 +385,8 @@ function calculateHeight(rotation) {
 
 function calculateWidth(rotation) {
   let w = 0;
+  // NOTE:  These loops are reversed intentionally,
+  //        Read the function name!
   for (let x = 0; x < rotation.length; x++) {
     for (let y = 0; y < rotation.length; y++) {
       if (rotation[y][x] == 1) {

@@ -21,8 +21,8 @@ function setup() {
 
 function draw() {
   board.paint();
-  setColor(YELLOW)
   
+  setColor(YELLOW)
   if(typeof pieceInHand !== 'undefined') {
     let idx = board.cellIndex(pieceInHand);
     Rect(board.cells[idx].x, board.cells[idx].y, board.cellSize, board.cellSize);  
@@ -30,7 +30,7 @@ function draw() {
   
 }
 
-function findPiece() {
+function pieceToDrag() {
   for (let i = 0; i < board.activePieces.length; i++) {
     let piece = board.activePieces[i];
     if (dragStart(mouseX() - board.x, mouseY() - board.y, piece.x, piece.y, piece.size, piece.size)) {
@@ -40,25 +40,21 @@ function findPiece() {
 }
 
 function mousePressed() {
-  if (pieceInHand = findPiece()) {
+  if (pieceInHand = pieceToDrag()) {
     pieceInHand.inHand(true)
     originalPiece = cloneClass(pieceInHand);
   }
 }
 
 function mouseMove() {
-  let drag;
-  
   mX = mouseX();
   mY = mouseY();
   
+  let drag;
   if (drag = dragMove(dragX(), dragY())) {
     if (typeof pieceInHand !== 'undefined') {
-
       pieceInHand.x = drag.x - board.x;
       pieceInHand.y = drag.y - board.y;
-
-    
     }
   }
 }
