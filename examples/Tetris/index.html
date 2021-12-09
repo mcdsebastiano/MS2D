@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Tetris</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> 
+    <style>
+    * {
+        font-family: 'Press Start 2P', cursive;
+        line-height: 1.5;
+        margin: 0px;
+        margin: 0px;
+        padding: 0px; 
+        
+    }
+	
+	body {
+		background-color: black;
+		color: white;
+	}
+
+    </style>
+  </head>
+  <body>
+    <canvas id="webgl" width="650" height="500">
+      Please use a browser that supports "canvas"
+    </canvas>    
+    <script src="../../lib/MS2D.js"></script>
+	<script src="tetris.js"></script>
+	<p><u>Controls:</u></p>
+	<p>Z - Rotate Left</p>
+	<p>X - Rotate Right</p>
+	<p>Arrow keys - Move Piece</p>
+	<p>Space - Drop Piece</p>
+  </body>
+</html>

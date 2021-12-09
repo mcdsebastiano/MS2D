@@ -1,0 +1,23 @@
+/*
+ * This was actually interesting heli behaviour -- might be useful
+ * 
+ * if (heli.pos.x + heli.tex.width / 2 > guy.pos.x - 20 && heli.pos.x + heli.tex.width / 2 < guy.pos.x + 20) {
+ *     
+ * heli.dir.x = 0;
+ * heli.dir.y = 0;
+ * }
+ * 
+ * if (Math.floor(heli.pos.y) < 0) {
+ * lifting = false;
+ * } else if (Math.floor(heli.pos.y) > 120) {
+ * lifting = true;
+ * heli.dir.y = 0;
+ * }
+ * 
+ * if (lifting == true) {
+ * heli.dir.add(lift);
+ * } else {
+ * heli.dir.add(new Vector(guy.pos.x - heli.pos.x, 0))
+ *
+ * } 
+ */
