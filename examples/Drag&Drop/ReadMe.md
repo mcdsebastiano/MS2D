@@ -1,2 +1,2 @@
 ## Drag & Drop Demo
-[Open](http://msebastiano.ca/MS2D/examples/Drag&Drop)
+[Open](https://mcdsebastiano.github.io/MS2D/examples/Drag&Drop)

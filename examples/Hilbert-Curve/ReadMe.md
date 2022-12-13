@@ -1,2 +1,2 @@
 ## Hilbert Curve
-[Play Demo](http://msebastiano.ca/MS2D/examples/Hilbert-Curve)
+[Play Demo](https://mcdsebastiano.github.io/MS2D/examples/Hilbert-Curve)

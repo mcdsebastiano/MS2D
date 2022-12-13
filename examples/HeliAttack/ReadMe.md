@@ -1,2 +1,2 @@
 ## HeliAttack
-[Play Demo](http://msebastiano.ca/MS2D/examples/HeliAttack)
+[Play Demo](https://mcdsebastiano.github.io/MS2D/examples/HeliAttack)

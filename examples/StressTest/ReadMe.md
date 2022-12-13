@@ -1,2 +1,2 @@
 ## Stress Test
-[Open](http://msebastiano.ca/MS2D/examples/StressTest)
+[Open](https://mcdsebastiano.github.io/MS2D/examples/StressTest)

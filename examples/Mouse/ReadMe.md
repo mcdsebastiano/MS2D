@@ -1,2 +1,2 @@
 ## Mouse Test
-[Open](http://msebastiano.ca/MS2D/examples/Mouse)
+[Open](https://mcdsebastiano.github.io/MS2D/examples/Mouse)

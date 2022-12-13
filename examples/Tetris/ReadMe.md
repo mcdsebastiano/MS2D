@@ -1,2 +1,2 @@
 ## Tetris
-[Play Demo](http://msebastiano.ca/MS2D/examples/Tetris)
+[Play Demo](https://mcdsebastiano.github.io/MS2D/examples/Tetris)

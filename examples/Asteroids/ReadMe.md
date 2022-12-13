@@ -1,2 +1,2 @@
 ## Asteroids
-[Play Demo](http://msebastiano.ca/MS2D/examples/Asteroids)
+[Play Demo](https://mcdsebastiano.github.io/MS2D/examples/Asteroids)
